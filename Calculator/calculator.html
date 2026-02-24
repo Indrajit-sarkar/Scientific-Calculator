@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description"
+        content="Premium scientific calculator with Basic, Scientific, and Programmer modes. Features calculation history, memory functions, dark/light themes, and full keyboard support.">
+    <title>Scientific Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="calculator.css">
+</head>
+
+<body>
+    <div class="iphone">
+        <div class="screen">
+            <div class="island">
+                <div class="island-cam"></div>
+                <div class="island-dot"></div>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <span class="status-time" id="statusTime">9:41</span>
+                <div class="status-icons">
+                    <svg width="17" height="12" viewBox="0 0 17 12">
+                        <rect x="0" y="4" width="3" height="8" rx="1" />
+                        <rect x="4.5" y="2.5" width="3" height="9.5" rx="1" />
+                        <rect x="9" y="1" width="3" height="11" rx="1" />
+                        <rect x="13.5" y="0" width="3" height="12" rx="1" />
+                    </svg>
+                    <svg width="16" height="12" viewBox="0 0 16 12">
+                        <ellipse cx="8" cy="11" rx="1.5" ry="1.5" />
+                        <path d="M4 7.5C5.2 6.3 6.5 5.5 8 5.5s2.8.8 4 2" stroke="white" stroke-width="1.5" fill="none"
+                            stroke-linecap="round" />
+                        <path d="M1.5 5C3.5 3 5.6 1.8 8 1.8S12.5 3 14.5 5" stroke="white" stroke-width="1.5" fill="none"
+                            stroke-linecap="round" />
+                    </svg>
+                    <svg width="26" height="13" viewBox="0 0 26 13">
+                        <rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="white" stroke-opacity="0.35"
+                            fill="none" />
+                        <rect x="2" y="2" width="17" height="9" rx="2" fill="white" />
+                        <path d="M24 4.5v4a2 2 0 000-4z" fill="white" fill-opacity="0.4" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Top bar -->
+            <div class="app-topbar">
+                <span class="app-title">Calculator</span>
+                <div class="topbar-actions">
+                    <button class="icon-btn" id="historyBtn" data-action="openHistory" aria-label="Calculation history">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12,6 12,12 16,14" />
+                        </svg>
+                    </button>
+                    <button class="icon-btn" id="themeBtn" data-action="toggleTheme"
+                        aria-label="Toggle theme">☀️</button>
+                    <button class="icon-btn" id="helpBtn" data-action="openHelp" aria-label="Help">?</button>
+                </div>
+            </div>
+
+            <div class="calc-body">
+                <!-- Angle toggle -->
+                <div class="angle-row">
+                    <button class="angle-pill" id="pillDeg" data-action="setDeg" aria-label="Degrees mode">DEG</button>
+                    <button class="angle-pill active" id="pillRad" data-action="setRad"
+                        aria-label="Radians mode">RAD</button>
+                </div>
+
+                <!-- Mode selector -->
+                <div class="mode-selector" role="tablist">
+                    <button class="mode-btn active" data-mode="basic" role="tab" aria-selected="true">Basic</button>
+                    <button class="mode-btn" data-mode="sci" role="tab" aria-selected="false">Scientific</button>
+                    <button class="mode-btn" data-mode="prog" role="tab" aria-selected="false">Programmer</button>
+                </div>
+
+                <!-- Display -->
+                <div class="display-area" id="displayArea">
+                    <div class="display-header">
+                        <span class="mem-indicator" id="memIndicator">M</span>
+                        <div class="expr-line" id="expr" aria-label="Expression"></div>
+                    </div>
+                    <div class="main-display-row">
+                        <div class="main-display" id="display" role="status" aria-live="polite"
+                            aria-label="Calculator result">0</div>
+                        <button class="backspace-btn" id="backspaceBtn" data-action="backspace"
+                            aria-label="Delete last character">⌫</button>
+                    </div>
+                    <div class="copy-toast" id="copyToast">Copied!</div>
+                </div>
+
+                <!-- Scientific row -->
+                <div class="sci-grid" id="sciRow" style="display:none;" role="group" aria-label="Scientific functions">
+                    <button class="btn sci-trig" data-fn="sin" aria-label="Sine">sin</button>
+                    <button class="btn sci-trig" data-fn="cos" aria-label="Cosine">cos</button>
+                    <button class="btn sci-trig" data-fn="tan" aria-label="Tangent">tan</button>
+                    <button class="btn sci-log" data-fn="log" aria-label="Log base 10">log</button>
+                    <button class="btn sci-log" data-fn="ln" aria-label="Natural log">ln</button>
+                    <button class="btn sci-trig" data-fn="asin" aria-label="Inverse sine">sin⁻¹</button>
+                    <button class="btn sci-trig" data-fn="acos" aria-label="Inverse cosine">cos⁻¹</button>
+                    <button class="btn sci-trig" data-fn="atan" aria-label="Inverse tangent">tan⁻¹</button>
+                    <button class="btn sci-log" data-fn="log2" aria-label="Log base 2">log₂</button>
+                    <button class="btn sci-log" data-fn="exp" aria-label="e to the x">eˣ</button>
+                    <button class="btn sci-power" data-fn="sqrt" aria-label="Square root">√x</button>
+                    <button class="btn sci-power" data-fn="cbrt" aria-label="Cube root">∛x</button>
+                    <button class="btn sci-power" data-fn="sqr" aria-label="Square">x²</button>
+                    <button class="btn sci-power" data-op="^" aria-label="Power">xʸ</button>
+                    <button class="btn sci-power" data-fn="fact" aria-label="Factorial">n!</button>
+                    <button class="btn sci-const" data-action="insertPi" aria-label="Pi">π</button>
+                    <button class="btn sci-const" data-action="insertE" aria-label="Euler number">e</button>
+                    <button class="btn sci-misc" data-fn="abs" aria-label="Absolute value">|x|</button>
+                    <button class="btn sci-misc" data-fn="inv" aria-label="Reciprocal">1/x</button>
+                    <button class="btn sci-misc" data-op="%" aria-label="Modulo">mod</button>
+                </div>
+
+                <!-- Memory row -->
+                <div class="mem-row" id="memRow" style="display:none;" role="group" aria-label="Memory functions">
+                    <button class="btn sci-mem" data-mem="MC" aria-label="Memory clear">MC</button>
+                    <button class="btn sci-mem" data-mem="MR" aria-label="Memory recall">MR</button>
+                    <button class="btn sci-mem" data-mem="M+" aria-label="Memory add">M+</button>
+                    <button class="btn sci-mem" data-mem="M-" aria-label="Memory subtract">M−</button>
+                </div>
+
+                <!-- Programmer row -->
+                <div class="prog-grid" id="progRow" style="display:none;" role="group"
+                    aria-label="Programmer functions">
+                    <button class="btn sci-misc" data-bit="&" aria-label="Bitwise AND">AND</button>
+                    <button class="btn sci-misc" data-bit="|" aria-label="Bitwise OR">OR</button>
+                    <button class="btn sci-misc" data-bit="⊕" aria-label="Bitwise XOR">XOR</button>
+                    <button class="btn sci-mem" data-action="flipBits" aria-label="Bitwise NOT">NOT</button>
+                    <button class="btn sci-misc" data-bit="<<" aria-label="Left shift">LSH</button>
+                    <button class="btn sci-power" data-base="hex" aria-label="Convert to hexadecimal">HEX</button>
+                    <button class="btn sci-power" data-base="bin" aria-label="Convert to binary">BIN</button>
+                    <button class="btn sci-power" data-base="oct" aria-label="Convert to octal">OCT</button>
+                    <button class="btn sci-power" data-base="dec" aria-label="Convert to decimal">DEC</button>
+                    <button class="btn sci-misc" data-bit=">>" aria-label="Right shift">RSH</button>
+                </div>
+
+                <!-- Main button grid -->
+                <div class="btn-grid" role="group" aria-label="Calculator buttons">
+                    <button class="btn btn-fn" data-action="clear" aria-label="All clear">AC</button>
+                    <button class="btn btn-fn" data-action="toggleSign" aria-label="Toggle sign">+/−</button>
+                    <button class="btn btn-fn" data-action="percent" aria-label="Percent">%</button>
+                    <button class="btn btn-op op-div" data-op="/" aria-label="Divide">÷</button>
+
+                    <button class="btn btn-num" data-num="7">7</button>
+                    <button class="btn btn-num" data-num="8">8</button>
+                    <button class="btn btn-num" data-num="9">9</button>
+                    <button class="btn btn-op op-mul" data-op="*" aria-label="Multiply">×</button>
+
+                    <button class="btn btn-num" data-num="4">4</button>
+                    <button class="btn btn-num" data-num="5">5</button>
+                    <button class="btn btn-num" data-num="6">6</button>
+                    <button class="btn btn-op op-sub" data-op="-" aria-label="Subtract">−</button>
+
+                    <button class="btn btn-num" data-num="1">1</button>
+                    <button class="btn btn-num" data-num="2">2</button>
+                    <button class="btn btn-num" data-num="3">3</button>
+                    <button class="btn btn-op op-add" data-op="+" aria-label="Add">+</button>
+
+                    <button class="btn btn-num btn-zero" data-num="0">0</button>
+                    <button class="btn btn-num" data-action="dot" aria-label="Decimal point">.</button>
+                    <button class="btn btn-op op-eq" data-action="calculate" aria-label="Equals">=</button>
+                </div>
+            </div>
+
+            <!-- Help Overlay -->
+            <div class="overlay" id="helpOverlay">
+                <div class="sheet">
+                    <div class="sheet-handle"></div>
+                    <div class="sheet-header">
+                        <span class="sheet-title">📱 Calculator Guide</span>
+                        <button class="sheet-close" data-action="closeHelp" aria-label="Close help">✕</button>
+                    </div>
+                    <div class="sheet-scroll">
+                        <div class="help-section">
+                            <div class="help-section-title">Basic Operations</div>
+                            <div class="help-card">
+                                <div class="help-row">
+                                    <div class="help-icon ic-orange">÷</div>
+                                    <div class="help-text-wrap">
+                                        <div class="help-label">Division ÷</div>
+                                        <div class="help-desc">Divides first number by second. Division by zero shows
+                                            error.</div>
+                                    </div>
+                                </div>
+                                <div class="help-row">
+                                    <div class="help-icon ic-green">×</div>
+                                    <div class="help-text-wrap">
+                                        <div class="help-label">Multiplication ×</div>
+                                        <div class="help-desc">Multiplies two numbers. Works with decimals and
+                                            negatives.</div>
+                                    </div>
+                                </div>
+                                <div class="help-row">
+                                    <div class="help-icon ic-blue">−</div>
+                                    <div class="help-text-wrap">
+                                        <div class="help-label">Subtraction −</div>
+                                        <div class="help-desc">Subtracts the second number from the first.</div>
+                                    </div>
+                                </div>
+                                <div class="help-row">
+                                    <div class="help-icon ic-purple">+</div>
+                                    <div class="help-text-wrap">
+                                        <div class="help-label">Addition +</div>
+                                        <div class="help-desc">Adds two numbers. Chain multiple additions.</div>
+                                    </div>
+                                </div>
+                                <div class="help-row">
+                                    <div class="help-icon ic-red" style="font-size:14px">=</div>
+                                    <div class="help-text-wrap">
+                                        <div class="help-label">Equals =</div>
+                                        <div class="help-desc">Evaluates the expression. Also triggered by Enter key.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="help-section">
+                            <div class="help-section-title">Utility</div>
+                            <div class="help-card">
+                                <div class="help-row">
+                                    <div class="help-icon ic-gray" style="font-size:11px;font-weight:700">AC</div>
+                                    <div class="help-text-wrap">
+                                        <div class="help-label">All Clear</div>
+                                        <div class="help-desc">Wipes everything — fresh start.</div>
+                                    </div>
+                                </div>
+                                <div class="help-row">
+                                    <div class="help-icon ic-gray" style="font-size:11px;font-weight:600">+/−</div>
+                                    <div class="help-text-wrap">
+                                        <div class="help-label">Toggle Sign</div>
+                                        <div class="help-desc">Flips between positive and negative.</div>
+                                    </div>
+                                </div>
+                                <div class="help-row">
+                                    <div class="help-icon ic-gray" style="font-size:15px">⌫</div>
+                                    <div class="help-text-wrap">
+                                        <div class="help-label">Backspace</div>
+                                        <div class="help-desc">Deletes last character. Also: swipe left on display or
+                                            press Backspace key.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="help-section">
+                            <div class="help-section-title">Scientific Mode</div>
+                            <div class="help-card">
+                                <div class="help-row">
+                                    <div class="help-icon ic-teal" style="font-size:10px;font-weight:800">SIN</div>
+                                    <div class="help-text-wrap">
+                                        <div class="help-label">Trig — sin, cos, tan & inverses</div>
+                                        <div class="help-desc">Toggle DEG/RAD for angle units. Inverse functions: sin⁻¹,
+                                            cos⁻¹, tan⁻¹.</div>
+                                    </div>
+                                </div>
+                                <div class="help-row">
+                                    <div class="help-icon ic-mint" style="font-size:10px;font-weight:800">LOG</div>
+                                    <div class="help-text-wrap">
+                                        <div class="help-label">Logarithms & Powers</div>
+                                        <div class="help-desc"><b>log</b>=base-10, <b>ln</b>=natural,
+                                            <b>log₂</b>=binary. <b>x²</b>, <b>xʸ</b>, <b>√x</b>, <b>∛x</b>, <b>n!</b>
+                                            factorial.</div>
+                                    </div>
+                                </div>
+                                <div class="help-row">
+                                    <div class="help-icon ic-purple" style="font-size:13px">π e</div>
+                                    <div class="help-text-wrap">
+                                        <div class="help-label">Constants & Memory</div>
+                                        <div class="help-desc">π≈3.14159, e≈2.71828. <b>M+/M−</b> add/subtract to
+                                            memory, <b>MR</b> recall, <b>MC</b> clear.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="help-section">
+                            <div class="help-section-title">Programmer Mode</div>
+                            <div class="help-card">
+                                <div class="help-row">
+                                    <div class="help-icon ic-indigo" style="font-size:9px;font-weight:800">HEX</div>
+                                    <div class="help-text-wrap">
+                                        <div class="help-label">Base Conversion & Bitwise</div>
+                                        <div class="help-desc">Convert to HEX/BIN/OCT/DEC. Bitwise: <b>AND</b>,
+                                            <b>OR</b>, <b>XOR</b>, <b>NOT</b>. Shift: <b>LSH</b>, <b>RSH</b>.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="help-section">
+                            <div class="help-section-title">Tips</div>
+                            <div class="help-card">
+                                <div class="help-row">
+                                    <div class="help-icon ic-gray" style="font-size:18px">⌨️</div>
+                                    <div class="help-text-wrap">
+                                        <div class="help-label">Keyboard Support</div>
+                                        <div class="help-desc">Type numbers & operators. <b>Enter/=</b> calculates.
+                                            <b>Backspace</b> deletes. <b>Esc</b> clears. <b>^</b> for powers.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tip-badge">💡 Tap the display to copy the result • Swipe left to delete</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Overlay -->
+            <div class="overlay" id="historyOverlay">
+                <div class="sheet">
+                    <div class="sheet-handle"></div>
+                    <div class="sheet-header">
+                        <span class="sheet-title">📋 History</span>
+                        <div class="sheet-header-actions">
+                            <button class="clear-btn" data-action="clearHistory">Clear All</button>
+                            <button class="sheet-close" data-action="closeHistory" aria-label="Close history">✕</button>
+                        </div>
+                    </div>
+                    <div class="sheet-scroll" id="historyList"></div>
+                    <div class="history-empty" id="historyEmpty">No calculations yet</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="calculator.js"></script>
+</body>
+
+</html>
